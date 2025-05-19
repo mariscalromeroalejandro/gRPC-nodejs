@@ -1,15 +1,17 @@
 # grpc-nodejs
 
-A Node.js application that demonstrates bidirectional streaming using gRPC with two services:
+A Node.js application demonstrating bidirectional streaming using gRPC with three services:
 
 1. Greet Service
 2. Calculator Service
+3. Blog Service
 
 ## Prerequisites
 
 * Node.js (v16 or later)
 * gRPC Tools
 * Protobuf Compiler
+* Docker (for MongoDB)
 
 ## Installation
 
@@ -34,22 +36,27 @@ To generate the gRPC client and server code from `.proto` files, run:
 npm run pb:gen
 ```
 
-This command uses the `gen.sh` script located in the `scripts` folder and processes both `greet` and `calculator` services.
+This command uses the `gen.sh` script located in the `scripts` folder and processes `greet`, `calculator`, and `blog` services.
+
+---
 
 ## Running the Services
 
 ### Enabling TLS/SSL:
 
-To enable TLS/SSL, set the tls variable to true in both the client and server main() functions. Ensure the following files are available in the ./ssl directory:
+To enable TLS/SSL, set the `tls` variable to `true` in both the client and server main() functions. Ensure the following files are available in the `./ssl` directory:
 
-`ca.crt` - Root Certificate
+* `ca.crt` - Root Certificate
+* `server.crt` - Server Certificate
+* `server.pem` - Private Key
 
-`server.crt` - Server Certificate
+Run the `ssl:gen` script to generate these files:
 
-`server.pem` - Private Key
+```bash
+npm run ssl:gen
+```
 
-Run the `ssl:gen` script to generate these files.
-The server can also be configured for secure or insecure connections. The tls variable in the server and client `main()` function controls the configuration.
+---
 
 ### Greet Service
 
@@ -65,6 +72,8 @@ npm run greet:server
 npm run greet:client
 ```
 
+---
+
 ### Calculator Service
 
 * Start the Calculator Server:
@@ -79,36 +88,63 @@ npm run calculator:server
 npm run calculator:client
 ```
 
-## Client Implementation
+---
 
-The `main()` function in `client/index.js` is the entry point for the client-side implementation of the Calculator service. It establishes a connection to the gRPC server and invokes the desired RPC method.
+### Blog Service
 
-### Usage:
+The Blog Service demonstrates CRUD operations with MongoDB using gRPC.
 
-* The client is set to invoke the `doMax` function by default. This function streams a series of numbers to the server and receives the maximum number in the stream as a response.
+#### Starting MongoDB:
 
-* To run other functions such as `doSum`, `doPrime`, or `doAvg`, uncomment the respective function calls in the `main()` function and comment out the current `doMax(client)` call.
+Before running the Blog Service, start MongoDB using Docker:
 
-Example:
+```bash
+npm run blog:db
+```
+
+#### Start the Blog Server:
+
+```bash
+npm run blog:server
+```
+
+#### Run the Blog Client:
+
+```bash
+npm run blog:client
+```
+
+---
+
+### Client Implementation
+
+Each service has its own client implementation located in its respective folder (`greet/client`, `calculator/client`, `blog/client`).
+
+Example usage for the Blog client:
 
 ```javascript
 function main() {
-    const creds = grpc.ChannelCredentials.createInsecure();
-    const client = new CalculatorServiceClient('localhost:50051', creds);
+    const creds = grpc.credentials.createInsecure();
+    const client = new BlogServiceClient('localhost:50051', creds);
 
-    // Uncomment the desired function call to test:
-    // doSum(client);
-    // doPrime(client);
-    // doAvg(client);
-    doMax(client);  // This is the default implementation
+    const req = new Blog()
+        .setAuthorId('Alex')
+        .setTitle('My First Blog')
+        .setContent('This is a sample blog post.');
+
+    client.createBlog(req, (err, res) => {
+        if (err) {
+            console.error('Error:', err.message);
+            return;
+        }
+        console.log('Blog created with ID:', res.getId());
+    });
 }
+
+main();
 ```
 
-After making changes, run the client using:
-
-```bash
-npm run calculator:client
-```
+---
 
 ## Project Structure
 
@@ -117,22 +153,34 @@ grpc-nodejs/
 ├── greet/
 │   ├── client/
 │   ├── server/
-│   └── greet.proto
+│   └── proto/
 ├── calculator/
 │   ├── client/
 │   ├── server/
-│   └── calculator.proto
+│   └── proto/
+├── blog/
+│   ├── client/
+│   ├── server/
+│   ├── proto/
+│   └── docker-compose.yml
 ├── scripts/
 │   └── gen.sh
+├── ssl/
+│   └── (SSL Certificates)
 ├── package.json
 └── README.md
 ```
+
+---
 
 ## Dependencies
 
 * `@grpc/grpc-js`: gRPC library for Node.js
 * `google-protobuf`: Protocol Buffers library for Node.js
 * `grpc-tools`: Tools for compiling `.proto` files
+* `mongodb`: MongoDB driver for Node.js
+
+---
 
 ## License
 
