@@ -26,6 +26,28 @@ function deserialize_calculator_AvgResponse(buffer_arg) {
   return calculator_pb.AvgResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_calculator_MaxRequest(arg) {
+  if (!(arg instanceof calculator_pb.MaxRequest)) {
+    throw new Error('Expected argument of type calculator.MaxRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_MaxRequest(buffer_arg) {
+  return calculator_pb.MaxRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_calculator_MaxResponse(arg) {
+  if (!(arg instanceof calculator_pb.MaxResponse)) {
+    throw new Error('Expected argument of type calculator.MaxResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_MaxResponse(buffer_arg) {
+  return calculator_pb.MaxResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_calculator_PrimeRequest(arg) {
   if (!(arg instanceof calculator_pb.PrimeRequest)) {
     throw new Error('Expected argument of type calculator.PrimeRequest');
@@ -104,6 +126,17 @@ var CalculatorServiceService = exports.CalculatorServiceService = {
     requestDeserialize: deserialize_calculator_AvgRequest,
     responseSerialize: serialize_calculator_AvgResponse,
     responseDeserialize: deserialize_calculator_AvgResponse,
+  },
+  max: {
+    path: '/calculator.CalculatorService/Max',
+    requestStream: true,
+    responseStream: true,
+    requestType: calculator_pb.MaxRequest,
+    responseType: calculator_pb.MaxResponse,
+    requestSerialize: serialize_calculator_MaxRequest,
+    requestDeserialize: deserialize_calculator_MaxRequest,
+    responseSerialize: serialize_calculator_MaxResponse,
+    responseDeserialize: deserialize_calculator_MaxResponse,
   },
 };
 

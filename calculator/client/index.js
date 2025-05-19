@@ -1,6 +1,6 @@
 const grpc = require('@grpc/grpc-js');
 const { CalculatorServiceClient } = require('../proto/calculator_grpc_pb')
-const { SumRequest, PrimeRequest, AvgRequest } = require('../proto/calculator_pb')
+const { SumRequest, PrimeRequest, AvgRequest, MaxRequest } = require('../proto/calculator_pb')
 
 function doSum(client) {
     console.log('sum was invoked');
@@ -42,12 +42,26 @@ function doAvg(client) {
     call.end()
 }
 
+function doMax(client) {
+    console.log('max was invoked');
+    const numbers = [4, 7, 2, 19, 6, 32];
+    const call = client.max();
+    call.on('data', (res) => {
+        console.log(`Max: ${res.getResult()}`)
+    })
+    numbers.map((number) => {
+        return new MaxRequest().setNumber(number)
+    }).forEach((req) => call.write(req))
+    call.end()
+}
+
 function main() {
     const creds = grpc.ChannelCredentials.createInsecure();
     const client = new CalculatorServiceClient('localhost:50051', creds);
     // doSum(client);
     // doPrime(client);
-    doAvg(client);
+    // doAvg(client);
+    doMax(client);
 
 }
 

@@ -41,3 +41,17 @@ exports.avg = (call, callback) => {
         callback(null,res)
     })
 }
+
+exports.max = (call, _) => {
+    let max = 0;
+    call.on('data', (req) => {
+        console.log(`Received request: ${req}`)
+        const number = req.getNumber();
+        if (number > max) {
+            const res = new pb.MaxResponse().setResult(`${number}`);
+            call.write(res)
+            max = number;
+        }
+    })
+    call.on('end', () => call.end());
+}
