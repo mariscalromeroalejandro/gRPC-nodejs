@@ -4,6 +4,28 @@
 var grpc = require('@grpc/grpc-js');
 var calculator_pb = require('./calculator_pb.js');
 
+function serialize_calculator_PrimeRequest(arg) {
+  if (!(arg instanceof calculator_pb.PrimeRequest)) {
+    throw new Error('Expected argument of type calculator.PrimeRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_PrimeRequest(buffer_arg) {
+  return calculator_pb.PrimeRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_calculator_PrimeResponse(arg) {
+  if (!(arg instanceof calculator_pb.PrimeResponse)) {
+    throw new Error('Expected argument of type calculator.PrimeResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_PrimeResponse(buffer_arg) {
+  return calculator_pb.PrimeResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_calculator_SumRequest(arg) {
   if (!(arg instanceof calculator_pb.SumRequest)) {
     throw new Error('Expected argument of type calculator.SumRequest');
@@ -38,6 +60,17 @@ var CalculatorServiceService = exports.CalculatorServiceService = {
     requestDeserialize: deserialize_calculator_SumRequest,
     responseSerialize: serialize_calculator_SumResponse,
     responseDeserialize: deserialize_calculator_SumResponse,
+  },
+  primes: {
+    path: '/calculator.CalculatorService/Primes',
+    requestStream: false,
+    responseStream: true,
+    requestType: calculator_pb.PrimeRequest,
+    responseType: calculator_pb.PrimeResponse,
+    requestSerialize: serialize_calculator_PrimeRequest,
+    requestDeserialize: deserialize_calculator_PrimeRequest,
+    responseSerialize: serialize_calculator_PrimeResponse,
+    responseDeserialize: deserialize_calculator_PrimeResponse,
   },
 };
 

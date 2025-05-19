@@ -6,3 +6,15 @@ exports.greet = (call, callback) => {
         .setResult(`Hello ${call.request.getFirstName()}`);
     callback(null, res);
 }
+
+exports.greetManyTimes = (call, _) => {
+    console.log('Greet many times was invoked');
+    
+    for (let i = 0; i < 10; i++) {
+        const res = new pb.GreetResponse();
+        res.setResult(`Hello ${call.request.getFirstName()} - number ${i}`)
+        call.write(res)
+    }
+    call.end();
+
+}

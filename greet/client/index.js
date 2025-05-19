@@ -16,10 +16,21 @@ function doGreet(client) {
     });
 }
 
+function doGreetManyTimes(client) {
+    console.log('Do greet many times was invoked');
+    const req = new GreetRequest()
+        .setFirstName('Alex');
+    const call = client.greetManyTimes(req);
+    call.on('data', (res) => {
+        console.log(`Greet many times: ${res.getResult()}`)
+    })
+}
+
 function main() {
     const creds = grpc.ChannelCredentials.createInsecure();
     const client = new GreetServiceClient('localhost:50051', creds);
-        doGreet(client);
+    // doGreet(client);
+    doGreetManyTimes(client);
 
 }
 
