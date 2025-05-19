@@ -4,6 +4,28 @@
 var grpc = require('@grpc/grpc-js');
 var calculator_pb = require('./calculator_pb.js');
 
+function serialize_calculator_AvgRequest(arg) {
+  if (!(arg instanceof calculator_pb.AvgRequest)) {
+    throw new Error('Expected argument of type calculator.AvgRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_AvgRequest(buffer_arg) {
+  return calculator_pb.AvgRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_calculator_AvgResponse(arg) {
+  if (!(arg instanceof calculator_pb.AvgResponse)) {
+    throw new Error('Expected argument of type calculator.AvgResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_calculator_AvgResponse(buffer_arg) {
+  return calculator_pb.AvgResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_calculator_PrimeRequest(arg) {
   if (!(arg instanceof calculator_pb.PrimeRequest)) {
     throw new Error('Expected argument of type calculator.PrimeRequest');
@@ -71,6 +93,17 @@ var CalculatorServiceService = exports.CalculatorServiceService = {
     requestDeserialize: deserialize_calculator_PrimeRequest,
     responseSerialize: serialize_calculator_PrimeResponse,
     responseDeserialize: deserialize_calculator_PrimeResponse,
+  },
+  avg: {
+    path: '/calculator.CalculatorService/Avg',
+    requestStream: true,
+    responseStream: false,
+    requestType: calculator_pb.AvgRequest,
+    responseType: calculator_pb.AvgResponse,
+    requestSerialize: serialize_calculator_AvgRequest,
+    requestDeserialize: deserialize_calculator_AvgRequest,
+    responseSerialize: serialize_calculator_AvgResponse,
+    responseDeserialize: deserialize_calculator_AvgResponse,
   },
 };
 

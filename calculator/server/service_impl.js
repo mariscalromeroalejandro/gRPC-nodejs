@@ -25,3 +25,19 @@ exports.primes = (call, _) => {
 
     call.end();
 };
+
+exports.avg = (call, callback) => {
+    console.log('Average was invoked');
+    let sum = 0;
+    let len = 0;
+    call.on('data', (req) => {
+        sum += req.getNumber()
+        len++;
+    })
+    call.on('end', () => {
+        const avg = sum / len;
+        const res = new pb.AvgResponse()
+            .setResult(avg);
+        callback(null,res)
+    })
+}
