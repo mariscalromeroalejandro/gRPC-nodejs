@@ -1,4 +1,5 @@
 const pb = require("../proto/calculator_pb");
+const grpc = require('@grpc/grpc-js')
 
 exports.sum = (call, callback) => {
     console.log("Sum was invoked");
@@ -54,4 +55,19 @@ exports.max = (call, _) => {
         }
     })
     call.on('end', () => call.end());
+}
+
+exports.sqrt = (call, callback) => {
+    console.log('sqrt was invoked')
+    const number = call.request.getNumber();
+    if (number < 0) {
+        callback({
+            code: grpc.status.INVALID_ARGUMENT,
+            message: `Number cannot be negative ${number}`
+        })
+    }
+    const response = new pb.SqrtResponse()
+        .setResult(Math.sqrt(number)
+    )
+    callback(null, response);
 }
