@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "pb:gen": "./scripts/gen.sh greet calculator",
+    "pb:gen": "./scripts/gen.sh greet calculator blog",
     "greet:server": "node greet/server/index.js",
     "greet:client": "node greet/client/index.js",
     "calculator:server": "node calculator/server/index.js",
     "calculator:client": "node calculator/client/index.js",
-    "ssl:gen": "cd ssl && ../scripts/ssl.sh && cd .."
+    "ssl:gen": "cd ssl && ../scripts/ssl.sh && cd ..",
+    "blog:db": "cd blog; docker-compose up; cd ..",
+    "blog:server": "node blog/server/index.js",
+    "blog:client": "node blog/client/index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +19,8 @@
   "description": "",
   "dependencies": {
     "@grpc/grpc-js": "^1.13.3",
-    "google-protobuf": "^3.21.4"
+    "google-protobuf": "^3.21.4",
+    "mongodb": "^6.16.0"
   },
   "devDependencies": {
     "grpc-tools": "^1.13.0"
