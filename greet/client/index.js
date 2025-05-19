@@ -61,6 +61,19 @@ function doGreetEveryone(client) {
     call.end();
 }
 
+function doGreetWithDeadline(client, ms) {
+    console.log(`Do greet with deadile was invoked`)
+    const req = new GreetRequest().setFirstName('Alex')
+    client.greetWithDeadline(req,
+        { deadline: new Date(Date.now() + ms) }, (err, res) => {
+            if (err) {
+                return console.error(err.message)
+            }
+            console.log(`GreetWithDeadline: ${res.getResult()}`)
+        }
+    )
+}
+
 
 function main() {
     const creds = grpc.ChannelCredentials.createInsecure();
@@ -68,7 +81,10 @@ function main() {
     // doGreet(client);
     // doGreetManyTimes(client);
     // doLongGreet(client);
-    doGreetEveryone(client);
+    // doGreetEveryone(client);
+        doGreetWithDeadline(client, 1000)
+
+    doGreetWithDeadline(client, 5000)
 
 }
 
