@@ -38,6 +38,19 @@ This command uses the `gen.sh` script located in the `scripts` folder and proces
 
 ## Running the Services
 
+### Enabling TLS/SSL:
+
+To enable TLS/SSL, set the tls variable to true in both the client and server main() functions. Ensure the following files are available in the ./ssl directory:
+
+`ca.crt` - Root Certificate
+
+`server.crt` - Server Certificate
+
+`server.pem` - Private Key
+
+Run the `ssl:gen` script to generate these files.
+The server can also be configured for secure or insecure connections. The tls variable in the server and client `main()` function controls the configuration.
+
 ### Greet Service
 
 * Start the Greet Server:
